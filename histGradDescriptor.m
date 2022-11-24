@@ -10,12 +10,17 @@ ds_grid = 0.25;
 ptCloudOut = pcdownsample(pointCloud(XYZ_in),'gridAverage',ds_grid);
 XYZ_ds = ptCloudOut.Location;
 
+
 % check if position offset exists
 if exist('pos_xyz','var')
     XYZ = XYZ_ds - ones(size(XYZ_ds,1),1)*pos_xyz;
 else
     XYZ = XYZ_ds;
 end
+
+% remove points out of distance
+dists = sqrt( XYZ(:,1).^2 + XYZ(:,2).^2 + XYZ(:,3).^2 );
+XYZ = XYZ(dists<maxDist,:);
 
 
 [rangeHist1] = getRangeHist(XYZ,maxDist,increment);
